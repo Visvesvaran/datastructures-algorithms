@@ -1,0 +1,124 @@
+package com.excel;
+
+import java.io.FileReader;
+import java.util.List;
+
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+
+public class ReadCsvFile {
+	private static final String CSV_FILE_PATH = "C:\\Users\\visve\\eclipse-workspace\\HandsOn_01\\csv\\01.csv";
+	private static final String CSV_FILE_PATH_SEMICOLON = "C:\\Users\\visve\\eclipse-workspace\\HandsOn_01\\csv\\01_semicolon.csv";
+
+	public static void main(String[] args) {
+
+		System.out.println("Read Data Line by Line With Header. \n"); 
+        readDataLineByLine(CSV_FILE_PATH); 
+        System.out.println("_______________________________________________");
+        
+        System.out.println("Read All Data at Once. \n"); 
+        readAllDataAtOnce(CSV_FILE_PATH, 0); 
+        System.out.println("_______________________________________________");
+        
+        System.out.println("Read All Data at Once and Hide the Header also. \n"); 
+        readAllDataAtOnce(CSV_FILE_PATH, 1); 
+        System.out.println("_______________________________________________"); 
+        
+        System.out.println("Custom Seperator here semi-colon\n"); 
+        readDataFromCustomSeperator(CSV_FILE_PATH_SEMICOLON); 
+        System.out.println("_______________________________________________");
+		
+	}
+	
+	@SuppressWarnings("resource")
+	public static void readDataLineByLine(String file) 
+    { 
+  
+        try { 
+  
+            // Create an object of filereader class 
+            // with CSV file as a parameter. 
+            FileReader filereader = new FileReader(file); 
+  
+            // create csvReader object passing 
+            // filereader as parameter 
+            CSVReader csvReader = new CSVReader(filereader); 
+            String[] nextRecord; 
+  
+            // we are going to read data line by line 
+            while ((nextRecord = csvReader.readNext()) != null) { 
+                for (String cell : nextRecord) { 
+                    System.out.print(cell + "\t"); 
+                } 
+                System.out.println(); 
+            } 
+        } 
+        catch (Exception e) { 
+            e.printStackTrace(); 
+        } 
+    }
+	
+	public static void readAllDataAtOnce(String file, int skip) 
+    { 
+        try { 
+  
+            // Create an object of filereader class 
+            // with CSV file as a parameter. 
+            FileReader filereader = new FileReader(file); 
+  
+            // create csvReader object 
+            // and skip first Line 
+            CSVReader csvReader = new CSVReaderBuilder(filereader) 
+                                      .withSkipLines(skip) 
+                                      .build(); 
+            List<String[]> allData = csvReader.readAll(); 
+  
+            // print Data 
+            for (String[] row : allData) { 
+                for (String cell : row) { 
+                    System.out.print(cell + "\t"); 
+                } 
+                System.out.println(); 
+            } 
+        } 
+        catch (Exception e) { 
+            e.printStackTrace(); 
+        } 
+    }
+	
+	public static void readDataFromCustomSeperator(String file) 
+    { 
+        try { 
+            // Create object of filereader 
+            // class with csv file as parameter. 
+            FileReader filereader = new FileReader(file); 
+  
+            // create csvParser object with 
+            // custom seperator semi-colon 
+            CSVParser parser = new CSVParserBuilder().withSeparator(';').build(); 
+  
+            // create csvReader object with 
+            // parameter filereader and parser 
+            CSVReader csvReader = new CSVReaderBuilder(filereader) 
+                                      .withCSVParser(parser) 
+                                      .build(); 
+  
+            // Read all data at once 
+            List<String[]> allData = csvReader.readAll(); 
+  
+            // print Data 
+            for (String[] row : allData) { 
+                for (String cell : row) { 
+                    System.out.print(cell + "\t"); 
+                } 
+                System.out.println(); 
+            } 
+        } 
+        catch (Exception e) { 
+            e.printStackTrace(); 
+        } 
+    } 
+
+}
